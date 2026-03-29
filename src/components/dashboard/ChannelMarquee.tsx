@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { useAnalysisStore } from '@/store/useAnalysisStore';
 
 export function ChannelMarquee() {
@@ -38,6 +37,7 @@ export function ChannelMarquee() {
               disabled={loading || !!result}
               className="flex items-center gap-3 sm:gap-5 px-4 sm:px-8 py-3 transition-all cursor-pointer whitespace-nowrap group hover:scale-105"
             >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={channel.avatar}
                 alt={channel.name}

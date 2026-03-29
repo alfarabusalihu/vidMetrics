@@ -1,6 +1,6 @@
 'use client';
 
-import { YoutubeVideo } from '@/types/youtube';
+
 
 import { AnalysisPlayerProps } from '@/types/components';
 

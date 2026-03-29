@@ -9,6 +9,7 @@ export function DashboardHeader() {
     <header className="absolute top-0 left-0 right-0 z-[100] w-full bg-white/70 backdrop-blur-3xl transition-all duration-500 py-3 sm:py-4 border-b border-neutral-200/50 shadow-sm">
       <div className="w-full">
         <div className={`flex items-center gap-4 sm:gap-6 transition-all duration-700 ${result ? 'justify-start pl-4 sm:pl-8' : 'justify-center py-6 sm:py-8'}`}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img 
             src="/favicon.ico" 
             alt="VidMetrics Logo" 

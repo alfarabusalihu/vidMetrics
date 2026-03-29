@@ -5,12 +5,12 @@ import { useState, useEffect } from 'react';
 import { YoutubeChannel } from '@/types/youtube';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
-import { Users, TrendingUp, Activity, ChevronDown, BarChart3, Zap, Target } from 'lucide-react';
+import { Users, Activity, ChevronDown, BarChart3, Zap, Target } from 'lucide-react';
 import { useAnalysisStore } from '@/store/useAnalysisStore';
 
 import { SidebarProps } from '@/types/components';
 
-export function Sidebar({ onChannelClick }: SidebarProps) {
+export function Sidebar({ onChannelClick: _onChannelClick }: SidebarProps) {
   const result = useAnalysisStore((state) => state.result);
   const [loadingMore, setLoadingMore] = useState(false);
   const [extraChannels, setExtraChannels] = useState<YoutubeChannel[]>([]);

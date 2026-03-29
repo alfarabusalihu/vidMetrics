@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useAnalysisStore } from '@/store/useAnalysisStore';
+import { YoutubeVideo } from '@/types/youtube';
 import { DashboardHeader } from '@/components/layout/DashboardHeader';
 import { SearchInput } from '@/components/dashboard/SearchInput';
 import { ChannelMarquee } from '@/components/dashboard/ChannelMarquee';
@@ -32,7 +33,7 @@ export default function Home() {
   } = useAnalysisStore();
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedVideo, setSelectedVideo] = useState<any>(null);
+  const [selectedVideo, setSelectedVideo] = useState<YoutubeVideo | null>(null);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const itemsPerPage = 12;
   const aiSectionRef = useRef<HTMLDivElement>(null);
@@ -58,7 +59,7 @@ export default function Home() {
     }
   };
 
-  const openModal = (video: any) => setSelectedVideo(video);
+  const openModal = (video: YoutubeVideo) => setSelectedVideo(video);
   const closeModal = () => setSelectedVideo(null);
 
   const paginatedVideos = result?.videos.slice(

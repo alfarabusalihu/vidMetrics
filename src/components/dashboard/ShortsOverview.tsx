@@ -1,7 +1,7 @@
 'use client';
 
 import { useAnalysisStore } from '@/store/useAnalysisStore';
-import { Zap, Video, TrendingUp, Activity } from 'lucide-react';
+import { Zap, Video } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export function ShortsOverview() {
@@ -32,7 +32,7 @@ export function ShortsOverview() {
         <p className="text-xs text-neutral-500 font-medium leading-relaxed max-w-2xl">
           Shorts are currently your most consistent growth lever. Your vertical content is averaging a 
           <span className="text-orange-600 font-bold mx-1"> {avgShortsScore}% </span> 
-          crushing score, significantly impacting your channel's virality.
+          crushing score, significantly impacting your channel&apos;s virality.
         </p>
       </div>
 

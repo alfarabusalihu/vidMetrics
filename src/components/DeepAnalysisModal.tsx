@@ -1,7 +1,6 @@
 'use client';
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { YoutubeVideo } from '@/types/youtube';
 import { BarChart3, ExternalLink } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';

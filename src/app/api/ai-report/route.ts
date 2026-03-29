@@ -3,7 +3,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 
 export async function POST(request: NextRequest) {
   try {
-    const { channel, videos, medianViews } = await request.json();
+    const { channel, medianViews } = await request.json();
 
     const apiKey = process.env.GEMINI_API_KEY;
 

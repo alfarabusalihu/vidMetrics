@@ -35,7 +35,7 @@ export function LegalModal({ type, children }: LegalModalProps) {
               <section className="space-y-4">
                 <h3 className="text-lg font-black text-neutral-900 uppercase tracking-widest">1. Information Collection and Use</h3>
                 <p>
-                  VidMetrics collects non-personally-identifying information of the sort that web browsers and servers typically make available, such as the browser type, language preference, referring site, and the date and time of each visitor request. Our purpose in collecting non-personally identifying information is to better understand how VidMetrics' visitors use its website and analytics tools.
+                  VidMetrics collects non-personally-identifying information of the sort that web browsers and servers typically make available, such as the browser type, language preference, referring site, and the date and time of each visitor request. Our purpose in collecting non-personally identifying information is to better understand how VidMetrics&apos; visitors use its website and analytics tools.
                 </p>
                 <p>
                   For the processing of YouTube channel data, we strictly utilize the official YouTube Data API v3. We only access and analyze publicly available statistical data, including view counts, subscriber ranges, and engagement metrics. VidMetrics does not store personal credentials or request access to private Google accounts.
@@ -45,14 +45,14 @@ export function LegalModal({ type, children }: LegalModalProps) {
               <section className="space-y-4">
                 <h3 className="text-lg font-black text-neutral-900 uppercase tracking-widest">2. AI Processing Data Flow</h3>
                 <p>
-                  When a user requests a "Strategic AI Insight," aggregated, anonymized channel statistics are temporarily transmitted to Google's Generative AI (Gemini) endpoints for processing. No personal identifiers are included in these payloads. The AI analysis focuses strictly on algorithmic trends and market positioning. Data sent for analysis is not used by our partners logic models to train future AI iterations.
+                  When a user requests a &quot;Strategic AI Insight,&quot; aggregated, anonymized channel statistics are temporarily transmitted to Google&apos;s Generative AI (Gemini) endpoints for processing. No personal identifiers are included in these payloads. The AI analysis focuses strictly on algorithmic trends and market positioning. Data sent for analysis is not used by our partners logic models to train future AI iterations.
                 </p>
               </section>
 
               <section className="space-y-4">
                 <h3 className="text-lg font-black text-neutral-900 uppercase tracking-widest">3. Cookies and Telemetry</h3>
                 <p>
-                  To enrich and perfect your experience, VidMetrics uses "Cookies," similar technologies and services provided by others to display personalized content, appropriate advertising, and store your preferences on your computer. We use local storage primarily to maintain your Zustand application state (e.g., your preferred channel list and analysis history).
+                  To enrich and perfect your experience, VidMetrics uses &quot;Cookies,&quot; similar technologies and services provided by others to display personalized content, appropriate advertising, and store your preferences on your computer. We use local storage primarily to maintain your Zustand application state (e.g., your preferred channel list and analysis history).
                 </p>
               </section>
 
@@ -75,21 +75,21 @@ export function LegalModal({ type, children }: LegalModalProps) {
               <section className="space-y-4">
                  <h3 className="text-lg font-black text-neutral-900 uppercase tracking-widest">2. API Rate Limiting and Fair Use</h3>
                 <p>
-                  VidMetrics interfaces with external providers (Google YouTube API, Google Generative AI). Users are subjected to global rate limits to ensure stability across the software infrastructure. Automated scraping, reverse engineering of the "Crushing Score" algorithm, or programmatic abuse of the AI Insight generator will result in immediate termination of platform access.
+                  VidMetrics interfaces with external providers (Google YouTube API, Google Generative AI). Users are subjected to global rate limits to ensure stability across the software infrastructure. Automated scraping, reverse engineering of the &quot;Crushing Score&quot; algorithm, or programmatic abuse of the AI Insight generator will result in immediate termination of platform access.
                 </p>
               </section>
 
                <section className="space-y-4">
                  <h3 className="text-lg font-black text-neutral-900 uppercase tracking-widest">3. Financial Disclaimer</h3>
                 <p>
-                  Any strategic insights, including the "Potential Monthly Revenue" estimations provided by VidMetrics, are purely speculative forecasts based on aggregated algorithmic trends. They do not constitute financial advice. VidMetrics makes no warranties regarding the accuracy of revenue or RPM predictions.
+                  Any strategic insights, including the &quot;Potential Monthly Revenue&quot; estimations provided by VidMetrics, are purely speculative forecasts based on aggregated algorithmic trends. They do not constitute financial advice. VidMetrics makes no warranties regarding the accuracy of revenue or RPM predictions.
                 </p>
               </section>
 
               <section className="space-y-4">
                  <h3 className="text-lg font-black text-neutral-900 uppercase tracking-widest">4. Intellectual Property</h3>
                 <p>
-                  VidMetrics, its "Crushing Score" calculation matrix, and the underlying SaaS architecture (developed by Alfar Dev) are intellectual property protected by copyright. Users may organically share the generated reports, but may not white-label or resell the infrastructure without explicit corporate consent.
+                  VidMetrics, its &quot;Crushing Score&quot; calculation matrix, and the underlying SaaS architecture (developed by Alfar Dev) are intellectual property protected by copyright. Users may organically share the generated reports, but may not white-label or resell the infrastructure without explicit corporate consent.
                 </p>
               </section>
             </>

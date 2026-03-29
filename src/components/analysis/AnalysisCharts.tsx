@@ -11,7 +11,7 @@ import {
   AreaChart,
   Area
 } from 'recharts';
-import { YoutubeVideo } from '@/types/youtube';
+
 
 import { AnalysisChartsProps } from '@/types/components';
 

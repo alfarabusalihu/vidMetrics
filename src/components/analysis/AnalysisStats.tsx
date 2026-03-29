@@ -1,6 +1,6 @@
 'use client';
 
-import { YoutubeVideo } from '@/types/youtube';
+
 import { TrendingUp, BarChart3, Users, Heart, MessageSquare, Calendar } from 'lucide-react';
 
 import { AnalysisStatsProps } from '@/types/components';

@@ -4,7 +4,7 @@ type CacheEntry<T> = {
 };
 
 class InMemoryCache {
-  private cache: Map<string, CacheEntry<any>> = new Map();
+  private cache: Map<string, CacheEntry<unknown>> = new Map();
 
   set<T>(key: string, data: T, ttlMs: number): void {
     const expiry = Date.now() + ttlMs;
