@@ -3,11 +3,12 @@
 import { useAnalysisStore } from '@/store/useAnalysisStore';
 
 export function ChannelMarquee() {
-  const { setUrl, loading, result, popularChannels } = useAnalysisStore();
+  const { setUrl, loading, result, popularChannels, analyzeChannel } = useAnalysisStore();
 
-  const handleChannelClick = (url: string) => {
+  const handleChannelClick = async (url: string) => {
     if (!loading && !result) {
       setUrl(url);
+      await analyzeChannel(url);
     }
   };
 

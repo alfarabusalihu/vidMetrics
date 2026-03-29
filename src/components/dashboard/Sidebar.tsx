@@ -11,7 +11,7 @@ import { useAnalysisStore } from '@/store/useAnalysisStore';
 import { SidebarProps } from '@/types/components';
 
 export function Sidebar({ onChannelClick: _onChannelClick }: SidebarProps) {
-  const result = useAnalysisStore((state) => state.result);
+  const { result, setUrl, analyzeChannel } = useAnalysisStore();
   const [loadingMore, setLoadingMore] = useState(false);
   const [extraChannels, setExtraChannels] = useState<YoutubeChannel[]>([]);
   const [hasMore, setHasMore] = useState(true);
@@ -154,13 +154,16 @@ export function Sidebar({ onChannelClick: _onChannelClick }: SidebarProps) {
           </div>
           <div className="space-y-2 flex-1 overflow-y-auto custom-scrollbar pr-1 max-h-[300px] md:max-h-none lg:max-h-[400px]">
             {allSimilarChannels.map((channel) => (
-              <a
+              <button
                 key={channel.id}
-                href={`https://youtube.com/channel/${channel.id}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`Visit ${channel.title} on YouTube`}
-                className="w-full flex items-center gap-3 p-3 bg-white hover:bg-sky-50 rounded-xl transition-all group cursor-pointer border border-transparent shadow-sm hover:border-sky-500/20"
+                onClick={async () => {
+                  const newUrl = `https://youtube.com/channel/${channel.id}`;
+                  setUrl(newUrl);
+                  _onChannelClick?.(newUrl);
+                  await analyzeChannel(newUrl);
+                }}
+                aria-label={`Analyze ${channel.title}`}
+                className="w-full text-left flex items-center gap-3 p-3 bg-white hover:bg-sky-50 rounded-xl transition-all group cursor-pointer border border-transparent shadow-sm hover:border-sky-500/20"
               >
                 <div className="relative w-8 h-8 shrink-0">
                   <NextImage
@@ -174,7 +177,7 @@ export function Sidebar({ onChannelClick: _onChannelClick }: SidebarProps) {
                 <span className="text-xs font-bold text-neutral-700 group-hover:text-sky-800 transition-colors truncate flex-1">
                   {channel.title}
                 </span>
-              </a>
+              </button>
             ))}
           </div>
           {hasMore && (
