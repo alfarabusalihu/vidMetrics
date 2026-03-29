@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import React from "react";
+import { Toaster } from 'sonner';
 import "./globals.css";
 
 const geistSans = Geist({
@@ -14,8 +15,21 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "vidMetrics",
-  description: "A youtube channel analysis tool",
+  title: "VidMetrics",
+  description: "Identify crushing competitor content strategies in seconds with AI-driven quantitative analytics and strategic brand benchmarking.",
+  keywords: ["YouTube Analytics", "Competitor Intelligence", "Content Strategy", "Video Marketing", "AI Analysis"],
+  openGraph: {
+    title: "VidMetrics",
+    description: "Identify crushing competitor content strategies in seconds with AI-driven quantitative analytics.",
+    type: "website",
+    locale: "en_US",
+    siteName: "VidMetrics",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "VidMetrics",
+    description: "Identify crushing content strategies with AI-driven analytics.",
+  },
 };
 
 export default function RootLayout({
@@ -26,10 +40,13 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}
-      style={{ colorScheme: 'dark' }}
+      className={`${geistSans.variable} ${geistMono.variable} min-h-screen antialiased`}
+      style={{ colorScheme: 'light' }}
     >
-      <body className="min-h-full bg-[#0a0a0a] text-neutral-50">{children}</body>
+      <body className="min-h-screen bg-neutral-50 text-neutral-900 flex flex-col">
+        {children}
+        <Toaster position="bottom-right" richColors theme="light" />
+      </body>
     </html>
   );
 }

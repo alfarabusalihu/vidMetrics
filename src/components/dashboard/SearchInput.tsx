@@ -1,69 +1,70 @@
 'use client';
 
-import { Search, X } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { AnimatePresence, motion } from 'framer-motion';
-import { AnalysisResult } from '@/types/youtube';
+import { LoadingDiamond } from '@/components/ui/LoadingDiamond';
 
-interface SearchInputProps {
-  url: string;
-  setUrl: (url: string) => void;
-  loading: boolean;
-  result: AnalysisResult | null;
-  handleReset: () => void;
-  error: string | null;
-}
+import { SearchInputProps } from '@/types/components';
 
-export function SearchInput({ url, setUrl, loading, result, handleReset, error }: SearchInputProps) {
+export function SearchInput({ url, setUrl, loading, result, handleReset, onSearch, error }: SearchInputProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // No-op because handleAnalyze is already triggered by useEffect on URL change.
-    // However, this form allows the 'Enter' key to proceed without browser warnings.
+    if (url && !loading && !result) {
+      onSearch();
+    }
   };
 
   return (
-    <div className={`max-w-2xl mx-auto transition-all duration-700 ${result ? 'mt-0 mb-12 translate-y-[-20px]' : 'mt-12'}`}>
-      <form onSubmit={handleSubmit} className="relative group">
-        <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-500 group-focus-within:text-orange-500 transition-colors pointer-events-none" />
-        <Input
-          placeholder="https://youtube.com/@channel"
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
-          disabled={loading || !!result}
-          className="pl-14 pr-14 bg-neutral-900/40 backdrop-blur-xl border-neutral-800/50 focus-visible:ring-orange-500/50 h-16 text-xl rounded-2xl transition-all shadow-inner-lg cursor-pointer disabled:opacity-80"
-        />
-        
-        {/* Auto-loading & Reset */}
-        <div className="absolute right-5 top-1/2 -translate-y-1/2 flex items-center gap-3">
-          {loading && <div className="h-5 w-5 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />}
-          {result && (
-            <button 
-              type="button"
-              onClick={handleReset}
-              className="p-2 hover:bg-neutral-800 rounded-lg transition-colors cursor-pointer group"
-              aria-label="Clear results"
-            >
-              <X className="h-5 w-5 text-neutral-500 group-hover:text-white" />
-            </button>
-          )}
-        </div>
-      </form>
+    <div className={`transition-all duration-700 w-full px-4 sm:px-6 ${result ? 'mt-8 sm:mt-12 md:mt-16 mb-4 sm:mb-6' : 'py-0'}`}>
+      <div className="w-full max-w-2xl mx-auto">
+        <form 
+          onSubmit={handleSubmit} 
+          className="relative group w-full"
+          role="search"
+          aria-label="YouTube Channel Search"
+        >
+          <Search 
+            className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-500 group-focus-within:text-sky-500 transition-colors pointer-events-none z-10" 
+            aria-hidden="true" 
+          />
+          <Input
+            placeholder={result ? "Channel URL" : "https://youtube.com/@channel"}
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+            disabled={loading || !!result}
+            className="pl-12 pr-12 md:pl-14 bg-white border-neutral-300 focus-visible:ring-sky-500/50 h-14 md:h-16 text-sm sm:text-base md:text-lg lg:text-xl rounded-xl transition-all shadow-md cursor-pointer disabled:opacity-80 text-neutral-900 placeholder:text-neutral-400 w-full"
+            aria-label="YouTube Channel URL"
+            aria-required="true"
+          />
+          <div className="absolute right-4 top-1/2 -translate-y-1/2 z-20">
+            {(loading || result) && (
+              <LoadingDiamond 
+                loading={loading} 
+                onClick={handleReset} 
+                className={result ? 'hover:bg-red-50' : ''}
+                size={loading ? 'md' : 'sm'}
+              />
+            )}
+          </div>
+        </form>
 
-      <AnimatePresence>
-        {error && (
-          <motion.div 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 10 }}
-            className="mt-6 p-4 bg-maroon-950/20 border border-maroon-900/30 rounded-2xl flex items-center gap-3 text-red-400"
-          >
-            <div className="h-5 w-5 shrink-0 bg-red-500/10 rounded-full flex items-center justify-center">
-              <span className="text-xs font-bold">!</span>
-            </div>
-            <p className="font-medium text-sm">{error}</p>
-          </motion.div>
-        )}
-      </AnimatePresence>
+        <AnimatePresence>
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              className="mt-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-3 text-red-600 shadow-sm"
+            >
+              <div className="h-5 w-5 shrink-0 bg-red-100 rounded-md flex items-center justify-center">
+                <span className="text-xs font-bold text-red-700">!</span>
+              </div>
+              <p className="font-medium text-sm">{error}</p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   );
 }

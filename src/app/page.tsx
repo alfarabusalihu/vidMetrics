@@ -1,196 +1,171 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { AnalysisResult, YoutubeVideo } from '@/types/youtube';
-import { Skeleton } from '@/components/ui/skeleton';
-import { DeepAnalysisModal } from '@/components/DeepAnalysisModal';
-import { ArrowUp } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-
-// Modular Components
+import React, { useState, useEffect, useRef } from 'react';
+import { useAnalysisStore } from '@/store/useAnalysisStore';
+import { DashboardHeader } from '@/components/layout/DashboardHeader';
 import { SearchInput } from '@/components/dashboard/SearchInput';
-import { Sidebar } from '@/components/dashboard/Sidebar';
+import { ChannelMarquee } from '@/components/dashboard/ChannelMarquee';
 import { VideoGrid } from '@/components/dashboard/VideoGrid';
+import { Sidebar } from '@/components/dashboard/Sidebar';
+import { ShortsOverview } from '@/components/dashboard/ShortsOverview';
+import { DashboardControls } from '@/components/dashboard/Controls';
 import { Pagination } from '@/components/dashboard/Pagination';
+import { AiReportPanel } from '@/components/dashboard/AiReportPanel';
+import { DeepAnalysisModal as VideoModal } from '@/components/DeepAnalysisModal';
+import { Footer } from '@/components/layout/Footer';
+import { Skeleton } from '@/components/ui/skeleton';
+import { AnimatePresence, motion } from 'framer-motion';
+import { ArrowUp } from 'lucide-react';
+
 
 export default function Home() {
-  const [url, setUrl] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [result, setResult] = useState<AnalysisResult | null>(null);
-  const [selectedVideo, setSelectedVideo] = useState<YoutubeVideo | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { 
+    url, 
+    setUrl, 
+    loading, 
+    result, 
+    setResult,
+    error, 
+    analyzeChannel, 
+    reset,
+    showAiReport
+  } = useAnalysisStore();
+
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedVideo, setSelectedVideo] = useState<any>(null);
   const [showScrollTop, setShowScrollTop] = useState(false);
-  const videosPerPage = 9;
-
-  // Debounced Auto-Analysis
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
-
-  const handleAnalyze = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    setResult(null);
-    setCurrentPage(1);
-
-    try {
-      const res = await fetch(`/api/analyze?url=${encodeURIComponent(url)}`);
-      
-      const contentType = res.headers.get('content-type');
-      if (!contentType || !contentType.includes('application/json')) {
-        const rawBody = await res.text();
-        console.error('Server returned non-JSON response:', {
-          status: res.status,
-          statusText: res.statusText,
-          body: rawBody.slice(0, 500) // Show first 500 chars
-        });
-        throw new Error(`Server error (${res.status}): The analysis service returned an invalid response format.`);
-      }
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || 'Failed to analyze channel');
-      }
-
-      setResult(data);
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'An unknown error occurred');
-    } finally {
-      setLoading(false);
-    }
-  }, [url]);
-
-  useEffect(() => {
-    if (!url || result) return;
-    
-    const isLikelyUrl = url.includes('youtube.com') || url.includes('youtu.be') || (url.startsWith('@') && url.length > 2);
-    
-    if (isLikelyUrl && !loading) {
-      if (timerRef.current) clearTimeout(timerRef.current);
-      timerRef.current = setTimeout(() => {
-        handleAnalyze();
-      }, 1000);
-    }
-
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-    };
-  }, [url, result, loading, handleAnalyze]);
+  const itemsPerPage = 12;
+  const aiSectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 300);
+      setShowScrollTop(window.scrollY > 400);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleReset = () => {
-    setUrl('');
-    setResult(null);
-    setError(null);
+  useEffect(() => {
+    if (showAiReport && aiSectionRef.current) {
+      aiSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [showAiReport]);
+
+  const handleAnalyze = async () => {
+    if (url) {
+      await analyzeChannel(url);
+      setCurrentPage(1);
+    }
   };
 
-  const openModal = (video: YoutubeVideo) => {
-    setSelectedVideo(video);
-    setIsModalOpen(true);
-  };
+  const openModal = (video: any) => setSelectedVideo(video);
+  const closeModal = () => setSelectedVideo(null);
 
   const paginatedVideos = result?.videos.slice(
-    (currentPage - 1) * videosPerPage,
-    currentPage * videosPerPage
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
   ) || [];
 
-  const totalPages = result ? Math.ceil(result.videos.length / videosPerPage) : 0;
+  const totalPages = result ? Math.ceil(result.videos.length / itemsPerPage) : 0;
 
   return (
-    <>
-      <main className="min-h-screen bg-[#0a0a0a] text-neutral-50 px-4 py-12 md:py-24 selection:bg-orange-500/30 font-sans relative overflow-x-hidden">
-      {/* Panoramic Background Background Decor */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[200%] h-[1000px] bg-gradient-to-b from-maroon-950/20 via-transparent to-transparent opacity-40 blur-[120px] pointer-events-none rounded-[100%]" />
-      
-      <div className="max-w-7xl mx-auto space-y-16 relative z-10">
-        {/* Header Section */}
-        {!result && (
-          <div className="text-center space-y-6 pt-12">
-            <h1 className="text-7xl md:text-9xl font-black tracking-tighter bg-gradient-to-b from-orange-500 via-orange-400 to-maroon-900 bg-clip-text text-transparent drop-shadow-[0_0_30px_rgba(249,115,22,0.2)]">
-              VidMetrics
-            </h1>
-            <p className="text-neutral-400 text-lg md:text-xl max-w-2xl mx-auto font-medium">
-              Identify &quot;crushing&quot; competitor content in seconds. Paste a channel URL to begin.
-            </p>
-          </div>
-        )}
+    <div className="flex flex-col min-h-screen">
+      <main className={`flex flex-col text-neutral-900 font-sans relative w-full flex-grow ${result ? 'overflow-y-auto' : 'h-screen overflow-hidden'}`}>
+        <DashboardHeader />
 
-        {/* Search Section */}
-        <SearchInput 
-          url={url} 
-          setUrl={setUrl} 
-          loading={loading} 
-          result={result} 
-          handleReset={handleReset} 
-          error={error} 
-        />
-
-        {/* Loading State */}
-        {loading && (
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 pt-12">
-            <div className="md:col-span-1 space-y-6">
-              <Skeleton className="h-48 w-full bg-neutral-900 rounded-3xl" />
-              <Skeleton className="h-12 w-full bg-neutral-900 rounded-xl" />
-              <Skeleton className="h-12 w-full bg-neutral-900 rounded-xl" />
-            </div>
-            <div className="md:col-span-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {[1, 2, 3, 4, 5, 6].map((i) => (
-                <Skeleton key={i} className="aspect-video w-full bg-neutral-900 rounded-3xl" />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Results Layout (Sidebar + Grid) */}
-        {result && (
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-12 items-start">
-            <Sidebar result={result} />
-
-            {/* Video List (Grid) */}
-            <div className="md:col-span-9 space-y-12">
-              <VideoGrid videos={paginatedVideos} onVideoClick={openModal} />
-              
-              <Pagination 
-                currentPage={currentPage} 
-                totalPages={totalPages} 
-                setCurrentPage={setCurrentPage} 
+        {/* 🍱 Senior Layout Architecture: Bulletproof Viewport Partitioning */}
+        <div className={`w-full mx-auto relative z-10 flex-grow px-4 sm:px-6 md:px-8 flex flex-col transition-all duration-700 ${result ? 'pt-24 sm:pt-32 pb-12 sm:pb-20' : 'h-full pt-48 sm:pt-56 pb-8'}`}>
+          
+          {/* Interaction Zone: Centered in the remaining space below the Safe Zone */}
+          <div className={`w-full flex-grow flex flex-col transition-all duration-1000 ${result ? 'justify-start' : 'justify-center items-center'}`}>
+            <div className={`w-full flex flex-col items-center ${result ? '' : 'flex-none z-20 space-y-2'}`}>
+              <SearchInput 
+                url={url} 
+                setUrl={setUrl} 
+                loading={loading} 
+                result={result} 
+                handleReset={reset} 
+                onSearch={handleAnalyze}
+                error={error} 
               />
+              
+              <ChannelMarquee />
             </div>
           </div>
-        )}
-      </div>
 
-      {/* Floating Scroll to Top */}
-      <AnimatePresence>
-        {showScrollTop && (
-          <motion.button
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="fixed bottom-8 right-8 p-4 bg-orange-500 text-white rounded-2xl shadow-2xl hover:bg-orange-600 transition-colors z-50 cursor-pointer shadow-orange-500/20"
-          >
-            <ArrowUp className="h-6 w-6" />
-          </motion.button>
-        )}
-      </AnimatePresence>
+          {loading && (
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-8 lg:gap-12 pt-4 md:pt-8 w-full">
+              <div className="md:col-span-1 space-y-4">
+                <Skeleton className="h-36 md:h-48 w-full bg-neutral-200 rounded-2xl" />
+                <Skeleton className="h-10 w-full bg-neutral-200 rounded-xl" />
+              </div>
+              <div className="md:col-span-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                {[1, 2, 3, 4, 5, 6].map((i) => (
+                  <Skeleton key={i} className="aspect-video w-full bg-neutral-200 rounded-xl" />
+                ))}
+              </div>
+            </div>
+          )}
 
+          {result && (
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8 lg:gap-12 items-start pt-4 pb-12 sm:pb-16 lg:pb-24">
+              <Sidebar onChannelClick={(newUrl: string) => {
+                setUrl(newUrl);
+                setResult(null); 
+              }} />
+
+              <div className="lg:col-span-9 space-y-8 md:space-y-12">
+                <ShortsOverview />
+                
+                <div className="space-y-6 md:space-y-8 lg:space-y-12">
+                  <DashboardControls />
+
+                  <VideoGrid videos={paginatedVideos} onVideoClick={openModal} />
+                  
+                  <Pagination 
+                    currentPage={currentPage} 
+                    totalPages={totalPages} 
+                    setCurrentPage={setCurrentPage} 
+                  />
+                </div>
+
+                {showAiReport && (
+                  <div ref={aiSectionRef} className="pt-4 md:pt-8 scroll-mt-6">
+                    <AiReportPanel />
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* On Homepage, the footer stays in the document flow of the viewport stack */}
+          {!result && <Footer />}
+        </div>
+
+        <AnimatePresence>
+          {showScrollTop && (
+            <motion.button
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="fixed bottom-8 right-8 z-[200] p-4 bg-sky-900 text-white rounded-full shadow-2xl hover:bg-sky-800 transition-all group"
+            >
+              <ArrowUp className="w-6 h-6 group-hover:-translate-y-1 transition-transform" />
+            </motion.button>
+          )}
+        </AnimatePresence>
       </main>
 
-      <DeepAnalysisModal 
+      {/* Result view maintains a standard footer at page end */}
+      {result && <Footer />}
+      
+      <VideoModal 
         video={selectedVideo} 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
+        isOpen={!!selectedVideo} 
+        onClose={closeModal} 
         channelMedian={result?.medianViews || 0}
       />
-    </>
+    </div>
   );
 }

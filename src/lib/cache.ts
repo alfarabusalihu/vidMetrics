@@ -1,0 +1,37 @@
+type CacheEntry<T> = {
+  data: T;
+  expiry: number;
+};
+
+class InMemoryCache {
+  private cache: Map<string, CacheEntry<any>> = new Map();
+
+  set<T>(key: string, data: T, ttlMs: number): void {
+    const expiry = Date.now() + ttlMs;
+    this.cache.set(key, { data, expiry });
+  }
+
+  get<T>(key: string): T | null {
+    const entry = this.cache.get(key);
+    
+    if (!entry) return null;
+
+    if (Date.now() > entry.expiry) {
+      this.cache.delete(key);
+      return null;
+    }
+
+    return entry.data as T;
+  }
+
+  delete(key: string): void {
+    this.cache.delete(key);
+  }
+
+  clear(): void {
+    this.cache.clear();
+  }
+}
+
+// Singleton instance for the server
+export const serverCache = new InMemoryCache();
