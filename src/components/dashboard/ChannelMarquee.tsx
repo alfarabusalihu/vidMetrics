@@ -13,7 +13,7 @@ export function ChannelMarquee() {
   };
 
   return (
-    <div className={`w-full overflow-hidden flex flex-col items-center gap-4 sm:gap-6 transition-all duration-700 ${result ? 'opacity-0 h-0 pointer-events-none' : 'opacity-100 py-2 sm:py-4'}`}>
+    <div className={`w-full overflow-hidden flex flex-col items-center gap-4 sm:gap-6 transition-all duration-700 ${(result || loading) ? 'opacity-0 h-0 pointer-events-none mb-0' : 'opacity-100 py-2 sm:py-4'}`}>
       <style>{`
         @keyframes slide-marquee {
           0% { transform: translateX(0); }

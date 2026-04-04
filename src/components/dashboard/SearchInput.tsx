@@ -1,5 +1,7 @@
 'use client';
 
+import React, { useEffect } from 'react';
+
 import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -7,11 +9,39 @@ import { LoadingDiamond } from '@/components/ui/LoadingDiamond';
 
 import { SearchInputProps } from '@/types/components';
 
+import { toast } from 'sonner';
+
 export function SearchInput({ url, setUrl, loading, result, handleReset, onSearch, error }: SearchInputProps) {
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+    }
+  }, [error]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (url && !loading && !result) {
       onSearch();
+    }
+  };
+
+  const handlePaste = (e: React.ClipboardEvent) => {
+    const pastedData = e.clipboardData.getData('text').trim();
+    if (pastedData) {
+      // Basic check: if it looks like a YouTube link or a handle, trigger search
+      if (pastedData.includes('youtube.com') || pastedData.includes('youtu.be') || pastedData.startsWith('@')) {
+        setUrl(pastedData);
+        onSearch(pastedData);
+      } else if (pastedData.length > 3) {
+        // Even if it's just a name, if it's long enough, maybe they want to search?
+        // But let's be conservative to avoid accidental searches.
+        // Actually, the user asked for "backup method when the url is invalid".
+        // So we should probably allow pasting names too.
+        setUrl(pastedData);
+        onSearch(pastedData);
+      } else {
+        toast.error('Invalid search term pasted');
+      }
     }
   };
 
@@ -32,6 +62,7 @@ export function SearchInput({ url, setUrl, loading, result, handleReset, onSearc
             placeholder={result ? "Channel URL" : "https://youtube.com/@channel"}
             value={url}
             onChange={(e) => setUrl(e.target.value)}
+            onPaste={handlePaste}
             disabled={loading || !!result}
             className="pl-12 pr-12 md:pl-14 bg-white border-neutral-300 focus-visible:ring-sky-500/50 h-14 md:h-16 text-sm sm:text-base md:text-lg lg:text-xl rounded-xl transition-all shadow-md cursor-pointer disabled:opacity-80 text-neutral-900 placeholder:text-neutral-400 w-full"
             aria-label="YouTube Channel URL"

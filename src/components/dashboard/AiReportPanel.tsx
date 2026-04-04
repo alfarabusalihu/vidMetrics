@@ -53,7 +53,7 @@ export function AiReportPanel() {
                   className="px-6 py-3 bg-neutral-100 hover:bg-neutral-200 border border-neutral-200 rounded-xl flex items-center gap-3 transition-all group cursor-pointer shadow-sm"
                 >
                   <FileDown className="h-5 w-5 text-sky-500 group-hover:scale-110 transition-transform" />
-                  <span className="text-[11px] font-black uppercase tracking-widest text-neutral-600">Download Brand Brief</span>
+                  <span className="text-[11px] font-black uppercase tracking-widest text-neutral-600">Download Report</span>
                 </button>
               )}
             </div>

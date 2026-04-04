@@ -27,6 +27,7 @@ export default function Home() {
     result, 
     setResult,
     error, 
+    sortBy,
     analyzeChannel, 
     reset,
     showAiReport
@@ -52,9 +53,10 @@ export default function Home() {
     }
   }, [showAiReport]);
 
-  const handleAnalyze = async () => {
-    if (url) {
-      await analyzeChannel(url);
+  const handleAnalyze = async (searchUrl?: string) => {
+    const targetUrl = typeof searchUrl === 'string' ? searchUrl : url;
+    if (targetUrl) {
+      await analyzeChannel(targetUrl);
       setCurrentPage(1);
     }
   };
@@ -62,10 +64,27 @@ export default function Home() {
   const openModal = (video: YoutubeVideo) => setSelectedVideo(video);
   const closeModal = () => setSelectedVideo(null);
 
-  const paginatedVideos = result?.videos.slice(
+  const sortedVideos = React.useMemo(() => {
+    if (!result?.videos) return [];
+    return [...result.videos].sort((a, b) => {
+      switch (sortBy) {
+        case 'views': 
+          return parseInt(b.statistics?.viewCount || '0') - parseInt(a.statistics?.viewCount || '0');
+        case 'likes': 
+          return parseInt(b.statistics?.likeCount || '0') - parseInt(a.statistics?.likeCount || '0');
+        case 'score': 
+          return (b.crushingScore || 0) - (a.crushingScore || 0);
+        case 'date':
+        default:
+          return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
+      }
+    });
+  }, [result?.videos, sortBy]);
+
+  const paginatedVideos = sortedVideos.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
-  ) || [];
+  );
 
   const totalPages = result ? Math.ceil(result.videos.length / itemsPerPage) : 0;
 
@@ -111,8 +130,7 @@ export default function Home() {
           {result && (
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8 lg:gap-12 items-start pt-4 pb-12 sm:pb-16 lg:pb-24">
               <Sidebar onChannelClick={(newUrl: string) => {
-                setUrl(newUrl);
-                setResult(null); 
+                handleAnalyze(newUrl);
               }} />
 
               <div className="lg:col-span-9 space-y-8 md:space-y-12">

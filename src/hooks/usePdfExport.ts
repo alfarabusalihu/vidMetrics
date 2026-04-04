@@ -16,9 +16,19 @@ export function usePdfExport() {
 
     const margin = 20;
     const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const maxUseableY = pageHeight - margin - 15; // Space for footer
     let cursorY = 30;
 
-    // Helper: Add Text
+    const checkPageBreak = (neededSpace = 10) => {
+      if (cursorY + neededSpace > maxUseableY) {
+        doc.addPage();
+        cursorY = margin + 10;
+        return true;
+      }
+      return false;
+    };
+
     const addText = (text: string, x: number, y: number, size = 10, style = 'normal', color = '#000000') => {
       doc.setFontSize(size);
       doc.setTextColor(color);
@@ -26,20 +36,35 @@ export function usePdfExport() {
       doc.text(text, x, y);
     };
 
+    const printParagraph = (text: string, x: number, size = 10, style = 'normal', color = '#000000', lineHeightOffset = 6) => {
+      doc.setFontSize(size);
+      doc.setTextColor(color);
+      doc.setFont('helvetica', style);
+      
+      const lines = doc.splitTextToSize(text, pageWidth - margin * 2 - (x - margin));
+      
+      lines.forEach((line: string) => {
+        checkPageBreak(lineHeightOffset);
+        doc.text(line, x, cursorY);
+        cursorY += lineHeightOffset;
+      });
+    };
+
     try {
       toast.loading('Preparing Brand Brief...');
 
-      // Title & Branding
+      // --- PAGE 1: Branding & Market Pos ---
+      // Header
       addText('VidMetrics | Strategic Brand Brief', margin, cursorY, 22, 'bold', '#0ea5e9');
       cursorY += 15;
       
       addText(`Report for: ${result.channel.title}`, margin, cursorY, 14, 'bold');
-      cursorY += 10;
+      cursorY += 8;
       
-      addText(`Generated on: ${new Date().toLocaleDateString()}`, margin, cursorY, 8, 'normal', '#666666');
+      addText(`Generated on: ${new Date().toLocaleDateString()}`, margin, cursorY, 9, 'normal', '#666666');
       cursorY += 20;
 
-      // 1. Channel Statistics
+      // 1. Core Metrics
       addText('1. CHANNEL CORE METRICS', margin, cursorY, 12, 'bold');
       cursorY += 10;
       
@@ -51,42 +76,51 @@ export function usePdfExport() {
       ];
       
       stats.forEach(stat => {
-        addText(`• ${stat}`, margin + 5, cursorY, 10);
-        cursorY += 7;
+        printParagraph(`• ${stat}`, margin + 5, 11, 'normal', '#333333', 7);
       });
-      cursorY += 15;
-
-      // 2. AI Strategic Summary
-      addText('2. AI STRATEGIC ANALYSIS', margin, cursorY, 12, 'bold');
       cursorY += 10;
+
+      // 2. Market Positioning
+      checkPageBreak(20);
+      addText('2. MARKET POSITIONING & HEALTH', margin, cursorY, 12, 'bold');
+      cursorY += 10;
+
+      addText('Positioning Overview:', margin + 5, cursorY, 11, 'bold');
+      cursorY += 8;
+      printParagraph(aiReport.marketPosition, margin + 5, 10, 'normal', '#444444', 6);
+      cursorY += 8;
+
+      checkPageBreak(25);
+      addText('Strategic Health Summary:', margin + 5, cursorY, 11, 'bold');
+      cursorY += 8;
+      printParagraph(aiReport.summary, margin + 5, 10, 'normal', '#444444', 6);
       
-      addText('Market Positioning:', margin + 5, cursorY, 10, 'bold');
-      cursorY += 6;
-      const posLines = doc.splitTextToSize(aiReport.marketPosition, pageWidth - margin * 2 - 10);
-      doc.text(posLines, margin + 5, cursorY);
-      cursorY += posLines.length * 6 + 4;
+      // Force Page 2 for Action Items to make it multi-page and un-cluttered
+      doc.addPage();
+      cursorY = margin + 15;
 
-      addText('Strategic Health Summary:', margin + 5, cursorY, 10, 'bold');
-      cursorY += 6;
-      const sumLines = doc.splitTextToSize(aiReport.summary, pageWidth - margin * 2 - 10);
-      doc.text(sumLines, margin + 5, cursorY);
-      cursorY += sumLines.length * 6 + 15;
-
-      // 3. Action Items
+      // --- PAGE 2: Action Items ---
       addText('3. PRIORITY ACTION ITEMS', margin, cursorY, 12, 'bold');
-      cursorY += 10;
+      cursorY += 12;
       
       aiReport.improvements.forEach((item: string, i: number) => {
-        const itemLines = doc.splitTextToSize(`${i + 1}. ${item}`, pageWidth - margin * 2 - 10);
-        doc.text(itemLines, margin + 5, cursorY);
-        cursorY += itemLines.length * 6 + 4;
+        checkPageBreak(25);
+        printParagraph(`${i + 1}. ${item}`, margin + 5, 10, 'normal', '#444444', 6);
+        cursorY += 6; // Padding between items
       });
 
-      // Footer
-      cursorY = doc.internal.pageSize.getHeight() - 20;
-      doc.setDrawColor('#0ea5e9');
-      doc.line(margin, cursorY - 5, pageWidth - margin, cursorY - 5);
-      addText('Confidential Competitive Intelligence by VidMetrics 3.0', margin, cursorY, 8, 'italic', '#999999');
+      // Add footers across all generated pages
+      const pageCount = doc.getNumberOfPages();
+      for (let i = 1; i <= pageCount; i++) {
+        doc.setPage(i);
+        const footerY = pageHeight - 15;
+        doc.setDrawColor('#0ea5e9');
+        doc.line(margin, footerY - 5, pageWidth - margin, footerY - 5);
+        addText('Confidential Competitive Intelligence by VidMetrics 3.0', margin, footerY, 8, 'italic', '#999999');
+        
+        // Page Number
+        addText(`Page ${i} of ${pageCount}`, pageWidth - margin - 20, footerY, 8, 'normal', '#999999');
+      }
 
       doc.save(`VidMetrics_Report_${result.channel.title.replace(/\s+/g, '_')}.pdf`);
       toast.dismiss();

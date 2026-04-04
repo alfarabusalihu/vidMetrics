@@ -33,7 +33,7 @@ export interface SearchInputProps {
   loading: boolean;
   result: AnalysisResult | null;
   handleReset: () => void;
-  onSearch: () => void;
+  onSearch: (url?: string) => void;
   error: string | null;
 }
 

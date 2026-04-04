@@ -56,25 +56,45 @@ const YoutubeVideoDetailsSchema = z.object({
 // ----------------------------------
 
 export async function resolveChannelId(url: string): Promise<string | null> {
-  // Handle different URL formats: @handle, channel ID, direct link
-  if (url.includes('youtube.com/channel/')) {
-    return url.split('channel/')[1].split('/')[0];
+  const cleanUrl = url.trim();
+  
+  // 1. Direct Channel ID format
+  if (cleanUrl.includes('youtube.com/channel/')) {
+    return cleanUrl.split('channel/')[1].split('/')[0].split('?')[0];
   }
 
-  if (url.includes('youtube.com/@')) {
-    const handle = url.split('@')[1].split('/')[0];
-    const res = await fetch(`${BASE_URL}/search?part=snippet&type=channel&q=${handle}&key=${API_KEY}`);
-    if (!res.ok) {
-      const errorText = await res.text();
-      console.error('YouTube API Search Error:', errorText);
-      return null;
+  // 2. Handle format (@name)
+  if (cleanUrl.includes('youtube.com/@')) {
+    const handle = cleanUrl.split('@')[1].split('/')[0].split('?')[0];
+    const res = await fetch(`${BASE_URL}/search?part=snippet&type=channel&q=${encodeURIComponent('@' + handle)}&key=${API_KEY}`);
+    if (res.ok) {
+      const data = YoutubeSearchSchema.parse(await res.json());
+      const id = data.items?.[0]?.id?.channelId;
+      if (id) return id;
     }
-    const data = YoutubeSearchSchema.parse(await res.json());
-    return data.items?.[0]?.id?.channelId || null;
   }
 
-  // Fallback: try search if it's just a handle/name
-  const res = await fetch(`${BASE_URL}/search?part=snippet&type=channel&q=${url}&key=${API_KEY}`);
+  // 3. Legacy /user/ and /c/ formats
+  const legacyMatch = cleanUrl.match(/youtube\.com\/(user|c)\/([^/?#]+)/i);
+  if (legacyMatch && legacyMatch[2]) {
+    const query = legacyMatch[2];
+    const res = await fetch(`${BASE_URL}/search?part=snippet&type=channel&q=${encodeURIComponent(query)}&key=${API_KEY}`);
+    if (res.ok) {
+      const data = YoutubeSearchSchema.parse(await res.json());
+      const id = data.items?.[0]?.id?.channelId;
+      if (id) return id;
+    }
+  }
+
+  // 4. Fallback: try search if it's just a handle, name, or extracted from an unknown URL format
+  let searchQuery = cleanUrl;
+  if (cleanUrl.includes('youtube.com/') || cleanUrl.includes('youtu.be/')) {
+     // Extract the last part of the path if it looks like a URL
+     const parts = cleanUrl.split('/');
+     searchQuery = parts[parts.length - 1].split('?')[0] || cleanUrl;
+  }
+
+  const res = await fetch(`${BASE_URL}/search?part=snippet&type=channel&q=${encodeURIComponent(searchQuery)}&key=${API_KEY}`);
   if (!res.ok) return null;
   const data = YoutubeSearchSchema.parse(await res.json());
   return data.items?.[0]?.id?.channelId || null;
