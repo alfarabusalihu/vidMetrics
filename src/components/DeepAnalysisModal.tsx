@@ -24,8 +24,8 @@ export function DeepAnalysisModal({ video, isOpen, onClose, channelMedian }: Dee
             <DialogHeader className="space-y-3 sm:space-y-6">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-6 pr-8 sm:pr-16">
                 <div className="flex items-center gap-4">
-                  <div className="p-3 bg-sky-500/10 rounded-2xl border border-sky-500/20 shadow-inner">
-                    <BarChart3 className="h-6 w-6 text-sky-500" />
+                  <div className="p-3 bg-sky-950/10 rounded-2xl border border-sky-950/20 shadow-inner">
+                    <BarChart3 className="h-6 w-6 text-sky-950" />
                   </div>
                   <DialogTitle className="text-xl sm:text-2xl md:text-3xl font-black tracking-tight text-neutral-900 leading-tight">
                     {video.title}
@@ -33,7 +33,7 @@ export function DeepAnalysisModal({ video, isOpen, onClose, channelMedian }: Dee
                 </div>
                 <div className="flex items-center gap-3 shrink-0">
                   <Badge 
-                    className="bg-sky-500 text-white border-none py-2 px-6 rounded-md text-[10px] font-black uppercase tracking-widest shadow-lg shadow-sky-500/20 cursor-default"
+                    className="bg-sky-950 text-white border-none py-2 px-6 rounded-md text-[10px] font-black uppercase tracking-widest shadow-lg shadow-sky-950/20 cursor-default"
                     role="status"
                     aria-label="Status: Enterprise Analysis Active"
                   >

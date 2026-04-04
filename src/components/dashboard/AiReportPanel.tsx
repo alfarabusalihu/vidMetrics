@@ -38,8 +38,8 @@ export function AiReportPanel() {
 
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6 mb-6 sm:mb-10">
               <div className="space-y-2 pr-16">
-                <h4 className="text-[10px] text-sky-400 font-black uppercase tracking-[0.3em] flex items-center gap-2">
-                  <Activity className="h-4 w-4 animate-pulse text-sky-500" /> 
+                <h4 className="text-[10px] text-sky-900 font-black uppercase tracking-[0.3em] flex items-center gap-2">
+                  <Activity className="h-4 w-4 animate-pulse text-sky-900" /> 
                   AI Channel Intelligence Report
                 </h4>
                 <p className="text-2xl font-black text-neutral-900 tracking-tight">
@@ -77,14 +77,14 @@ export function AiReportPanel() {
                       <div className="text-[10px] text-neutral-400 font-black uppercase tracking-[0.2em] flex items-center gap-2">
                         <Layout className="h-3 w-3" /> Market Positioning
                       </div>
-                      <p className="text-lg text-neutral-900 font-medium leading-relaxed border-l-2 border-sky-500/30 pl-6 py-2">
+                      <p className="text-lg text-neutral-900 font-medium leading-relaxed border-l-2 border-sky-950/30 pl-6 py-2">
                         {aiReport.marketPosition}
                       </p>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                       <div className="glass-panel p-6 space-y-2 bg-sky-500/5 border-sky-500/10">
-                          <div className="text-[9px] text-sky-600 font-black uppercase tracking-widest flex items-center gap-2">
+                       <div className="glass-panel p-6 space-y-2 bg-sky-950/5 border-sky-950/10 shadow-sm transition-all group/stat hover:border-sky-950/20">
+                          <div className="text-[9px] text-sky-900 font-black uppercase tracking-widest flex items-center gap-2">
                             <TrendingUp className="h-3 w-3" /> Efficiency Index
                           </div>
                           <div className="text-xl font-black text-neutral-900">
@@ -116,8 +116,8 @@ export function AiReportPanel() {
                           transition={{ delay: i * 0.1 }}
                           className="flex gap-4 items-start p-5 bg-white border border-neutral-200 shadow-sm rounded-xl hover:border-sky-500/20 hover:shadow-md transition-all group"
                         >
-                          <div className="h-8 w-8 rounded-xl bg-sky-500/10 flex items-center justify-center shrink-0 border border-sky-500/20 group-hover:bg-sky-500 group-hover:text-white transition-all">
-                            <span className="text-[12px] font-black text-sky-600 group-hover:text-white">{i + 1}</span>
+                          <div className="h-8 w-8 rounded-xl bg-sky-950/10 flex items-center justify-center shrink-0 border border-sky-950/20 group-hover:bg-sky-950 group-hover:text-white transition-all">
+                            <span className="text-[12px] font-black text-sky-900 group-hover:text-white">{i + 1}</span>
                           </div>
                           <p className="text-neutral-700 text-sm font-medium leading-relaxed group-hover:text-neutral-900 transition-colors">{item}</p>
                         </motion.div>

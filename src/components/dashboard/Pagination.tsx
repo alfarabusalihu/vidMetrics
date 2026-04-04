@@ -44,10 +44,10 @@ export function Pagination({ currentPage, totalPages, setCurrentPage }: Paginati
             aria-current={currentPage === page ? "page" : undefined}
             className={`h-8 min-w-8 px-2 flex items-center justify-center rounded-lg transition-all text-xs font-black ${
               currentPage === page 
-                ? 'bg-sky-500 text-white shadow-md shadow-sky-500/20' 
+                ? 'bg-sky-950 text-white shadow-md shadow-sky-950/20 shadow-inner' 
                 : page === '...' 
                   ? 'text-neutral-400 cursor-default bg-transparent hover:bg-transparent' 
-                  : 'bg-white text-neutral-600 border border-neutral-200 hover:text-neutral-900 hover:border-sky-500/30 shadow-sm cursor-pointer'
+                  : 'bg-white text-neutral-600 border border-neutral-200 hover:text-neutral-900 hover:border-sky-950/30 shadow-sm cursor-pointer'
             }`}
           >
             {page}

@@ -15,8 +15,8 @@ export function AnalysisStats({ video, channelMedian }: AnalysisStatsProps) {
         {/* Performance Card */}
         <div className="bg-white p-6 rounded-2xl border border-neutral-200 shadow-sm space-y-4">
           <div className="flex items-center gap-4">
-            <div className="p-3 bg-sky-500/10 rounded-xl">
-              <TrendingUp className="h-5 w-5 text-sky-500" />
+            <div className="p-3 bg-sky-950/10 rounded-xl border border-sky-950/20">
+              <TrendingUp className="h-5 w-5 text-sky-950" />
             </div>
             <div>
               <div className="text-3xl font-black text-neutral-900 tabular-nums">{performanceVsMedian}x</div>
@@ -86,8 +86,8 @@ export function AnalysisStats({ video, channelMedian }: AnalysisStatsProps) {
       </div>
 
       {/* AI Insight Placeholder */}
-      <div className="bg-sky-50 border border-sky-200 p-6 rounded-2xl space-y-4 shadow-sm relative">
-        <h4 className="text-[10px] text-sky-600 font-black uppercase tracking-widest">Quick Insight</h4>
+      <div className="bg-sky-950/5 border border-sky-950/10 p-6 rounded-2xl space-y-4 shadow-sm relative">
+        <h4 className="text-[10px] text-sky-900 font-black uppercase tracking-widest">Quick Insight</h4>
         <p className="text-neutral-700 text-sm leading-relaxed italic font-medium">
           &quot;This video strategy is highly effective. It has achieved a {performanceVsMedian}x multiplier compared to the channel baseline, indicating high algorithmic favor.&quot;
         </p>

@@ -70,7 +70,7 @@ export function Sidebar({ onChannelClick: _onChannelClick }: SidebarProps) {
               <h2 className="text-xl md:text-2xl font-black text-neutral-900 leading-tight truncate">
                 {result.channel.title}
               </h2>
-              <Badge className="bg-sky-800 text-white border-none font-black px-3 py-1 flex items-center gap-1.5 w-fit">
+              <Badge className="bg-sky-950 text-white border-none font-black px-3 py-1 flex items-center gap-1.5 w-fit">
                 <Activity className="h-3.5 w-3.5" /> Score: {result.channel.score}
               </Badge>
             </div>
@@ -105,13 +105,13 @@ export function Sidebar({ onChannelClick: _onChannelClick }: SidebarProps) {
               <div className="space-y-1.5">
                 <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-wider text-neutral-500">
                   <span>Performance</span>
-                  <span className="text-sky-800">{result.channel.avgPerformance}/40</span>
+                  <span className="text-sky-950">{result.channel.avgPerformance}/40</span>
                 </div>
                 <div className="h-1.5 w-full bg-neutral-100 rounded-full overflow-hidden">
                   <motion.div 
                     initial={{ width: 0 }}
                     animate={{ width: `${(result.channel.avgPerformance || 0) / 40 * 100}%` }}
-                    className="h-full bg-sky-800"
+                    className="h-full bg-sky-950"
                   />
                 </div>
               </div>

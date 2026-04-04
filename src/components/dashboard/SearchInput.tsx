@@ -18,6 +18,19 @@ export function SearchInput({ url, setUrl, loading, result, handleReset, onSearc
     }
   }, [error]);
 
+  // Autonomous Detection: Watch for valid looking URLs/handles as the user types
+  useEffect(() => {
+    const isUrl = url.includes('youtube.com/') || url.includes('youtu.be/');
+    const isHandle = url.startsWith('@') && url.length > 3;
+
+    if ((isUrl || isHandle) && !loading && !result) {
+      const timer = setTimeout(() => {
+        onSearch();
+      }, 1000); // 1s debounce to allow for full paste/type completion
+      return () => clearTimeout(timer);
+    }
+  }, [url, loading, result, onSearch]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (url && !loading && !result) {
@@ -28,19 +41,10 @@ export function SearchInput({ url, setUrl, loading, result, handleReset, onSearc
   const handlePaste = (e: React.ClipboardEvent) => {
     const pastedData = e.clipboardData.getData('text').trim();
     if (pastedData) {
-      // Basic check: if it looks like a YouTube link or a handle, trigger search
-      if (pastedData.includes('youtube.com') || pastedData.includes('youtu.be') || pastedData.startsWith('@')) {
-        setUrl(pastedData);
+      setUrl(pastedData);
+      // If it looks like a valid search, trigger instantly on paste
+      if (pastedData.includes('youtube.com') || pastedData.includes('youtu.be') || (pastedData.startsWith('@') && pastedData.length > 2)) {
         onSearch(pastedData);
-      } else if (pastedData.length > 3) {
-        // Even if it's just a name, if it's long enough, maybe they want to search?
-        // But let's be conservative to avoid accidental searches.
-        // Actually, the user asked for "backup method when the url is invalid".
-        // So we should probably allow pasting names too.
-        setUrl(pastedData);
-        onSearch(pastedData);
-      } else {
-        toast.error('Invalid search term pasted');
       }
     }
   };
@@ -64,11 +68,23 @@ export function SearchInput({ url, setUrl, loading, result, handleReset, onSearc
             onChange={(e) => setUrl(e.target.value)}
             onPaste={handlePaste}
             disabled={loading || !!result}
-            className="pl-12 pr-12 md:pl-14 bg-white border-neutral-300 focus-visible:ring-sky-500/50 h-14 md:h-16 text-sm sm:text-base md:text-lg lg:text-xl rounded-xl transition-all shadow-md cursor-pointer disabled:opacity-80 text-neutral-900 placeholder:text-neutral-400 w-full"
+            className="pl-12 pr-28 md:pl-14 md:pr-36 bg-white border-neutral-300 focus-visible:ring-neutral-200 h-14 md:h-16 text-sm sm:text-base md:text-lg lg:text-xl rounded-xl transition-all shadow-md cursor-pointer disabled:opacity-80 text-neutral-900 placeholder:text-neutral-400 w-full"
             aria-label="YouTube Channel URL"
             aria-required="true"
           />
-          <div className="absolute right-4 top-1/2 -translate-y-1/2 z-20">
+          <div className="absolute right-2.5 top-1/2 -translate-y-1/2 z-20 flex items-center gap-2">
+            {!loading && !result && url.length > 3 && (
+              <motion.button
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                whileHover={{ scale: 1.02, backgroundColor: '#0c4a6e' }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => onSearch()}
+                className="px-4 py-2.5 bg-sky-950 text-white rounded-lg text-[10px] font-black uppercase tracking-widest transition-all shadow-lg border border-sky-900/50 cursor-pointer"
+              >
+                Analyze
+              </motion.button>
+            )}
             {(loading || result) && (
               <LoadingDiamond 
                 loading={loading} 

@@ -53,13 +53,13 @@ export default function Home() {
     }
   }, [showAiReport]);
 
-  const handleAnalyze = async (searchUrl?: string) => {
+  const handleAnalyze = React.useCallback(async (searchUrl?: string) => {
     const targetUrl = typeof searchUrl === 'string' ? searchUrl : url;
     if (targetUrl) {
       await analyzeChannel(targetUrl);
       setCurrentPage(1);
     }
-  };
+  }, [url, analyzeChannel]);
 
   const openModal = (video: YoutubeVideo) => setSelectedVideo(video);
   const closeModal = () => setSelectedVideo(null);

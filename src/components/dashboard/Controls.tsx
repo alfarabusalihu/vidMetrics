@@ -54,7 +54,7 @@ export function DashboardControls() {
             key={type}
             onClick={() => setSortBy(type)}
             aria-pressed={sortBy === type}
-            className={`px-2 sm:px-3 py-1.5 rounded-lg text-[7px] sm:text-[9px] font-black uppercase tracking-widest transition-all cursor-pointer ${sortBy === type ? 'bg-sky-500 text-white shadow-md shadow-sky-500/20' : 'text-neutral-500 hover:text-neutral-900'}`}
+            className={`px-2 sm:px-3 py-1.5 rounded-lg text-[7px] sm:text-[9px] font-black uppercase tracking-widest transition-all cursor-pointer ${sortBy === type ? 'bg-sky-950 text-white shadow-md shadow-sky-950/20' : 'text-neutral-500 hover:text-neutral-900'}`}
           >
             {type}
           </button>
@@ -66,9 +66,9 @@ export function DashboardControls() {
         disabled={aiLoading}
         aria-busy={aiLoading}
         aria-label={showAiReport ? 'Report analysis active' : 'Generate AI market analysis'}
-        className={`px-3 sm:px-6 py-2.5 sm:py-3 rounded-xl text-[8px] sm:text-[10px] font-black uppercase tracking-widest transition-all cursor-pointer border flex items-center gap-2 sm:gap-3 shrink-0 justify-center ${showAiReport ? 'bg-sky-50/50 border-sky-500 text-sky-600 shadow-sm' : 'bg-white border-neutral-200 text-neutral-600 hover:text-neutral-900 hover:border-sky-500/30'}`}
+        className={`px-3 sm:px-6 py-2.5 sm:py-3 rounded-xl text-[8px] sm:text-[10px] font-black uppercase tracking-widest transition-all cursor-pointer border flex items-center gap-2 sm:gap-3 shrink-0 justify-center ${showAiReport ? 'bg-sky-50/50 border-sky-950 text-sky-950 shadow-sm' : 'bg-white border-neutral-200 text-neutral-600 hover:text-neutral-900 hover:border-sky-950/30'}`}
       >
-        {aiLoading && <div className="flex items-center justify-center animate-spin"><div className="h-2 w-2 bg-sky-500 rounded-[2px] rotate-45" /></div>}
+        {aiLoading && <div className="flex items-center justify-center animate-spin"><div className="h-2 w-2 bg-sky-950 rounded-[2px] rotate-45" /></div>}
         {showAiReport ? 'Report Active' : 'Strategic AI'}
       </button>
     </div>

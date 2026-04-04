@@ -44,14 +44,14 @@ export const VideoCard = memo(function VideoCard({ video, onClick }: VideoCardPr
         )}
       </div>
       <CardContent className="p-4 sm:p-6 space-y-4 sm:space-y-6">
-        <h3 className="text-sm font-black leading-tight text-neutral-900 group-hover:text-blue-900 transition-colors min-h-[2.5rem]">
+        <h3 className="text-sm font-black leading-tight text-neutral-900 group-hover:text-sky-900 transition-colors min-h-[2.5rem]">
           {video.title}
         </h3>
         
         <div className="flex items-center justify-between gap-4">
           <div className="space-y-4 flex-1">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-neutral-100 rounded-xl shadow-inner text-neutral-500 group-hover:text-sky-500 transition-colors">
+              <div className="p-2 bg-neutral-100 rounded-xl shadow-inner text-neutral-500 group-hover:text-sky-950 transition-colors">
                 <BarChart3 className="h-4 w-4" />
               </div>
               <div>

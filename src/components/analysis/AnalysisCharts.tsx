@@ -44,8 +44,8 @@ export function AnalysisCharts({ videos }: AnalysisChartsProps) {
             <AreaChart data={data}>
               <defs>
                 <linearGradient id="colorViews" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#0ea5e9" stopOpacity={0.3}/>
-                  <stop offset="95%" stopColor="#0ea5e9" stopOpacity={0}/>
+                  <stop offset="5%" stopColor="#082f49" stopOpacity={0.3}/>
+                  <stop offset="95%" stopColor="#082f49" stopOpacity={0}/>
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="#00000010" vertical={false} />
@@ -75,7 +75,7 @@ export function AnalysisCharts({ videos }: AnalysisChartsProps) {
               <Area 
                 type="monotone" 
                 dataKey="views" 
-                stroke="#0ea5e9" 
+                stroke="#082f49" 
                 strokeWidth={2}
                 fillOpacity={1} 
                 fill="url(#colorViews)" 

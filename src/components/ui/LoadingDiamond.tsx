@@ -57,7 +57,7 @@ export function LoadingDiamond({ loading, onClick, className = '', size = 'md' }
                 }
               : { duration: 0.4, ease: "backOut" }
           }
-          className={`absolute inset-0 bg-sky-500 shadow-[0_0_15px_rgba(14,165,233,0.4)] ${
+          className={`absolute inset-0 bg-sky-950 shadow-[0_0_20px_rgba(8,47,73,0.5)] ${
             !loading && 'opacity-0 scale-0'
           }`}
           style={{ 
@@ -75,8 +75,8 @@ export function LoadingDiamond({ loading, onClick, className = '', size = 'md' }
             className="absolute inset-0 flex items-center justify-center"
           >
             <div className="relative w-4 h-4">
-              <div className="absolute top-1/2 left-0 w-full h-0.5 bg-neutral-500 rounded-full rotate-45 transform -translate-y-1/2" />
-              <div className="absolute top-1/2 left-0 w-full h-0.5 bg-neutral-500 rounded-full -rotate-45 transform -translate-y-1/2" />
+              <div className="absolute top-1/2 left-0 w-full h-0.5 bg-white/80 rounded-full rotate-45 transform -translate-y-1/2" />
+              <div className="absolute top-1/2 left-0 w-full h-0.5 bg-white/80 rounded-full -rotate-45 transform -translate-y-1/2" />
             </div>
           </motion.div>
         )}
@@ -85,9 +85,9 @@ export function LoadingDiamond({ loading, onClick, className = '', size = 'md' }
       {/* Subtle background glow when loading */}
       {loading && (
         <motion.div
-          animate={{ opacity: [0.2, 0.5, 0.2] }}
+          animate={{ opacity: [0.1, 0.3, 0.1] }}
           transition={{ duration: 2, repeat: Infinity }}
-          className="absolute inset-0 bg-sky-500/10 rounded-xl blur-md"
+          className="absolute inset-0 bg-sky-950/20 rounded-xl blur-md"
         />
       )}
     </button>
